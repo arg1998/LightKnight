@@ -44,7 +44,7 @@
     "test": "rescripts test",
     "eject": "react-scripts eject",
     "postinstall": "electron-builder install-app-deps",
-    "preelectron-pack": "yarn build",
+    "preelectron-pack": "npm build",
     "electron-pack": "build -l",
     "install": "electron-rebuild",
     "rebuild": "electron-rebuild -f -w serialport",
