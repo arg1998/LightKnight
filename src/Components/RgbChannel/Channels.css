@@ -1,0 +1,11 @@
+.Channel {
+  position: relative;
+  height: 40px;
+  width: 100%;
+  border-top: 1px solid #34373a;
+  box-sizing: border-box;
+}
+
+.Channel_Selected {
+  background-color: #31373a;
+}

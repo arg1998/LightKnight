@@ -1,0 +1,10 @@
+.Frame_Container {
+  box-sizing: border-box;
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+
+.Frame_Container:hover {
+  border: 1px solid #efefef;
+}

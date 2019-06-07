@@ -1,0 +1,31 @@
+.CAR_Container {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  border-left: 1px solid #34373a;
+}
+.CAR_Container label {
+  color: #eee;
+  display: block;
+}
+.CAR_Container input {
+  margin-left: 5px;
+  width: 80px;
+  font-size: 18px;
+}
+
+.CAR_HorizontalLine {
+  width: 100%;
+  border-bottom: 1px solid #34373a;
+  margin: 10px 0px;
+}
+
+.CAR_CheckBox {
+
+}
+.CAR_CheckBox input {
+  font-size: 20%;
+}
+

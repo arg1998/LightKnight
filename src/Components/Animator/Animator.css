@@ -1,0 +1,54 @@
+.Animator_Bottom {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.Animator_MC_Container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Animator_middle_area {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  /* align-items: flex-end; */
+  /* height: 100%; */
+  /* border-top: 2px #34373a solid; */
+}
+.Animator_mid_copy_remove_container {
+  display: flex;
+  flex-direction: row;
+  border-right: 1px solid #34373a;
+}
+
+.Animator_Header {
+  height: 10vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px #34373a solid;
+}
+
+#waveform {
+  border-top: 2px solid #34373a;
+}
+
+.Animator_ColorPalletContainer {
+  /* height: 100%; */
+  border-left: 2px solid #34373a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+.Animator_ColorPalletContainer p {
+  color: #eee;
+  font-size: 20px;
+}

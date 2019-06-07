@@ -1,0 +1,21 @@
+.Button {
+  padding: 0px 20px;
+  border: 1px solid #999;
+  margin: 10px 5px;
+  box-sizing: border-box;
+  /* transition: border-bottom 0.2s linear; */
+  display: inline-block;
+}
+
+.Button p {
+  color: #eee;
+  font-size: 18px;
+  margin: 15px 5px;
+  -webkit-user-select: none;
+}
+
+.Button:hover {
+  border-bottom: 4px solid #ff653f;
+  margin-bottom: 7px;
+  background-color: rgba(0, 0, 0, 0.15);
+}

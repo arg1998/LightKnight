@@ -1,0 +1,38 @@
+.LS_container {
+  flex-grow: 1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+}
+
+.LS_LED_container {
+  position: relative;
+  flex-grow: 1;
+  box-sizing: border-box;
+}
+
+.LS_LED_INFO {
+  padding: 8px;
+  height: 100%;
+  border-left: 2px dashed #34373a;
+}
+.LS_LED_INFO p {
+  font-size: 18px;
+  color: #e2e2e2;
+}
+
+.LED {
+  width: 60px;
+  height: 60px;
+  background-color: #2b2e30;
+  /* box-sizing: border-box; */
+  border: 1px solid #999;
+  border-radius: 50%;
+}
+.DRAG_BOX {
+  display: inline-block;
+}
+
+.LED_selected {
+  border: 2px solid #fff;
+}

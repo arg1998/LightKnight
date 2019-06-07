@@ -1,0 +1,62 @@
+.HS_Container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  user-select: none;
+}
+.HS_Option {
+  padding-top: 100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.HS_Option:hover {
+  border-bottom: 8px #12f solid;
+  background-color: #252625;
+}
+
+.HS_Option:hover > p {
+  font-size: 34px;
+}
+.HS_Option > p {
+  color: #fff;
+  font-size: 30px;
+  user-select: none;
+}
+
+.NP_Container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+  width: 100%;
+  user-select: none;
+}
+
+.NP_Container p,
+label {
+  font-size: 18px;
+  color: #fee;
+}
+.NP_Container input {
+  margin-left: 20px;
+  padding: 5px;
+}
+
+.Input_Button {
+  margin: 0px 5px;
+  padding: 8px 5px;
+}
+
+.NP_Labels {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  color: #eee;
+}

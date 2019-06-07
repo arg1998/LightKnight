@@ -1,0 +1,13 @@
+.CP_Containers {
+  display: inline-block;
+  margin: 5px;
+}
+
+.chrome-picker {
+  background-color: rgba(110, 109, 109, 0.514) !important;
+  box-shadow: none !important;
+}
+
+.chrome-picker span {
+  color: #eee !important;
+}

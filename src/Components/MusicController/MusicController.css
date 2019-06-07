@@ -1,0 +1,59 @@
+.MC_Container {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  margin: 5px 20px;
+}
+
+.MC_Zoom {
+  width: 54px;
+  height: 54px;
+  background-size: 50% 50%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border-radius: 50%;
+  border: 1px solid #e2e2c9;
+}
+
+.MC_Zoom:hover {
+  background-color: #111;
+}
+
+.MC_Zoom:active {
+  background-color: rgb(3, 128, 201);
+}
+
+.MC_Out {
+  /* background-image: url("/assets/img/zoomout.png"); */
+}
+
+.MC_In {
+  /* background-image: url("/assets/img/zoomin.png"); */
+}
+
+.MC_C {
+  width: 86px;
+  height: 86px;
+  margin: 0px 10px;
+  background-size: 55% 55%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border: 1px solid #e2e2c9;
+  border-radius: 50%;
+}
+.MC_C:hover {
+  background-color: #111;
+}
+.MC_C:active {
+  background-color: rgb(3, 128, 201);
+}
+
+.MC_Play {
+  /* background-image: url("/assets/img/play.png"); */
+  background-position: 60% 50%;
+}
+
+.MC_Pause {
+  /* background-image: url("/assets/img/pause.png"); */
+}

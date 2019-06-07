@@ -1,0 +1,27 @@
+.IB_rounded {
+  border-radius: 50%;
+}
+
+.IB_rect {
+  border-radius: 1px;
+}
+
+.IB_active {
+  border: 1px solid rgb(255, 238, 0) !important;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.IB_icon_container {
+  height: 64px;
+  width: 64px;
+  background-size: 70% 70%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border: 1px solid #aaa;
+  display: inline-block;
+  margin: 2px 5px;
+}
+
+.IB_icon_container:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}

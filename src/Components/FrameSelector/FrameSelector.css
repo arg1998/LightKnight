@@ -1,0 +1,68 @@
+.FS_Container {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+  margin: 5px 20px;
+}
+.FS_Backward {
+  margin-left: 4px;
+  margin-right: 4px;
+  width: 54px;
+  height: 54px;
+  background-size: 50% 50%;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  border-radius: 50%;
+  border: 1px solid #e2e2c9;
+}
+.FS_Backward:hover {
+  background-color: #111;
+}
+.FS_Backward:active {
+  background-color: rgb(3, 128, 201);
+}
+.FS_Backward25 {
+  /* background-image: url("/assets/img/backward10.png"); */
+}
+.FS_Backward5 {
+  /* background-image: url("/assets/img/backward5.png"); */
+  background-position: 40% 50%;
+}
+.FS_Backward1 {
+  /* background-image: url("/assets/img/backward1.png"); */
+  background-position: 40% 50%;
+}
+
+.FS_Forward25 {
+  /* background-image: url("/assets/img/forward10.png"); */
+}
+.FS_Forward5 {
+  /* background-image: url("/assets/img/forward5.png"); */
+  background-position: 55% 50%;
+}
+.FS_Forward1 {
+  /* background-image: url("/assets/img/forward1.png"); */
+  background-position: 60% 50%;
+}
+
+.FS_FramePos {
+  border-radius: 5px;
+  width: 90px;
+  padding: 5px 0;
+  margin: 0px 2px;
+  font-size: 22px;
+  text-align: center;
+}
+.FS_FramePosContainer {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+.FS_FrameMiliSec {
+  color: aliceblue;
+  font-size: 18;
+  margin: 2px 0px;
+}
