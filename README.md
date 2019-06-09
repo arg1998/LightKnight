@@ -1,4 +1,9 @@
 # Light Knight Animator
+Light Knight (**_LK_** for short) is a LED Strip Animator. You can load any music and start animating your LED strips by placing keyframes at specific position. to actually see the animation on strips you must have a [Arduino Board](https://www.arduino.cc/).
+
+**WARNING**: This project is still under development. codes for Arduino will be committed soon. and some video tutorials will be posted on youtube too ;-). 
+
+Built With :heart: (actually PAIN) with [ReactJs](https://reactjs.org/), [Redux](https://redux.js.org/), [ElectronJs](https://electronjs.org/), [WaveSurfer](https://wavesurfer-js.org/), [TinyColor](https://bgrins.github.io/TinyColor/) and ...
 
 ### How To Run? 
 + Clone this repository 
@@ -9,7 +14,7 @@
 
 
 ### Keyboard Shortcuts : 
-| key          | action                                                 |
+| key          | Action                                                 |
 | ------------ | ------------------------------------------------------ |
 | W            | Select Upper Channel (Change Current Selected Channel) |
 | S            | Select Lower Channel (Change Current Selected Channel) |
