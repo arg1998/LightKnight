@@ -1,12 +1,29 @@
 # Light Knight Animator
 
 ### How To Run? 
-+ clone this repo 
-+ go into the project directory
-+ open terminal and type `npm install && npm run rebuild`
-+ for development environment run `npm run electron-dev`
-+ to build and package run `npm run electron-pack`
++ Clone this repository 
++ Go into the project directory
++ Open terminal and type `npm install && npm run rebuild`
++ For development environment, run `npm run electron-dev`
++ To build and package, run `npm run electron-pack`
 
+
+### Keyboard Shortcuts : 
+| key          | action                                                 |
+| ------------ | ------------------------------------------------------ |
+| W            | Select Upper Channel (Change Current Selected Channel) |
+| S            | Select Lower Channel (Change Current Selected Channel) |
+| 1            | Move Curser Backward By 1 Frame                        |
+| 3            | Move Curser Forward By 1 Frame                         |
+| 4            | Move Curser Backward By 5 Frame                        |
+| 6            | Move Curser Forward By 5 Frame                         |
+| 7            | Move Curser Backward By 25 Frame                       |
+| 9            | Move Curser Forward By 25 Frame                        |
+| Enter        | Place A New Keyframe                                   |
+| Space        | Remove A  Keyframe                                     |
+| Ctrl + Wheel | Interface Zoom                                         |
+
+<hr/>
 
 ### Screenshots 
 <img src="./screenshots/0001.png"/>
