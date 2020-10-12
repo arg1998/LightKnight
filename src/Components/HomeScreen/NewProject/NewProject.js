@@ -83,16 +83,12 @@ export class NewProject extends Component {
 
     await writeJsonFile(finalProjectPath, "channelsData.json", {
       clipBoard: {},
-      rgbChannels: ["rgb0", "rgb1"],
-      binaryChannels: ["bin0", "bin1", "bin2"],
-      rgb0: {},
-      rgb1: {},
-      bin0: {},
-      bin1: {},
-      bin2: {}
+      rgbChannels: [],
+      binaryChannels: [],
+      opacityChannels: [],
     });
     if (this.props.onCreate) {
-      this.props.onCreate(projectName, projectPath, musicPath, musicFileBlob);
+      this.props.onCreate(projectName, finalProjectPath, musicPath, musicFileBlob);
     }
   };
 

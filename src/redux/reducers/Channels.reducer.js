@@ -5,13 +5,12 @@ import tinyGradient from "tinygradient";
 
 const initialState = {
   clipBoard: {},
-  rgbChannels: ["rgb0", "rgb1"],
-  binaryChannels: ["bin0", "bin1", "bin2"],
-  rgb0: {},
-  rgb1: {},
-  bin0: {},
-  bin1: {},
-  bin2: {}
+  rgbChannels: [],
+  binaryChannels: [],
+  opacityChannels: [],
+  // rgb321351651: {},
+  // rgb646541321: {},
+  // bin84651313: {}
 };
 
 const _placeGradients = (state, data) => {
@@ -21,20 +20,37 @@ const _placeGradients = (state, data) => {
     colorFrom,
     colorTo,
     channelName,
-    maxFrames
+    maxFrames,
   } = data;
 
-  let gradient = tinyGradient(colorFrom, colorTo)
-    .rgb(placeTo - placeFrom + 1)
-    .map(val => val.toHexString());
+  let newState = state;
 
-  const newState = clone(state, false, 2);
+  if (channelName.startsWith("rgb")) {
+    let gradient = tinyGradient(colorFrom, colorTo)
+      .rgb(placeTo - placeFrom + 1)
+      .map((val) => val.toHexString());
 
-  for (let i = placeFrom, colorIndex = 0; i <= placeTo; i++, colorIndex++) {
-    if (i > maxFrames) {
-      break;
-    } else {
-      newState[channelName][i * 40] = gradient[colorIndex];
+    newState = clone(state, false, 2);
+
+    for (let i = placeFrom, colorIndex = 0; i <= placeTo; i++, colorIndex++) {
+      if (i > maxFrames) {
+        break;
+      } else {
+        newState[channelName][i * 40] = gradient[colorIndex];
+      }
+    }
+  } else if (channelName.startsWith("opa")) {
+    let length = Math.abs(placeTo - placeFrom) + 1;
+    const interval = (colorTo - colorFrom) / length;
+    let temp_color_alpha = colorFrom;
+
+    for (let i = placeFrom; i <= placeTo; i++) {
+      if (i > maxFrames) {
+        break;
+      } else {
+        newState[channelName][i * 40] = Math.floor(temp_color_alpha + interval);
+        temp_color_alpha += interval;
+      }
     }
   }
 
@@ -108,20 +124,29 @@ const ChannelsReducer = (oldState = initialState, action) => {
   switch (action.type) {
     case actionTypes.PLACE_KEYFRAME:
       const { channelName, framePos, data } = action.payload;
-      if (data === null || data === undefined || channelName === null) {
-        newState = oldState;
-        break;
-      } else if (oldState[channelName][framePos * 40] === data) {
-        newState = oldState;
+      if (oldState[channelName]) {
+        if (data === null || data === undefined || channelName === null) {
+          newState = oldState;
+          break;
+        } else if (oldState[channelName][framePos * 40] === data) {
+          newState = oldState;
+        } else {
+          newState = clone(oldState, false, 2);
+          newState[channelName][framePos * 40] = data;
+        }
       } else {
-        newState = clone(oldState, false, 2);
-        newState[channelName][framePos * 40] = data;
+        newState = oldState;
       }
       break;
 
     case actionTypes.REMOVE_KEYFRAME:
-      newState = clone(oldState, false, 2);
-      delete newState[action.payload.channelName][action.payload.framePos * 40];
+      const chName = action.payload.channelName;
+      if (oldState[chName]) {
+        newState = clone(oldState, false, 2);
+        delete newState[chName][action.payload.framePos * 40];
+      } else {
+        newState = oldState;
+      }
       break;
 
     case actionTypes.COPY_KEYFRAMES:
@@ -163,6 +188,45 @@ const ChannelsReducer = (oldState = initialState, action) => {
     case actionTypes.LOAD_STAGE:
       const { channelsData: chData } = action.payload;
       newState = chData;
+      break;
+
+    case actionTypes.ADD_RGB_CHANNEL:
+      newState = clone(oldState, false);
+      let rgb_channel_name = `rgb${Date.now()}`;
+      newState.rgbChannels.push(rgb_channel_name);
+      newState[rgb_channel_name] = {};
+      break;
+
+    case actionTypes.ADD_OPACITY_CHANNEL:
+      newState = clone(oldState, false);
+      let opacity_channel_name = `opa${Date.now()}`;
+      newState.opacityChannels.push(opacity_channel_name);
+      newState[opacity_channel_name] = {};
+      break;
+
+    case actionTypes.ADD_BIN_CHANNEL:
+      newState = clone(oldState, false);
+      let bin_channel_name = `bin${Date.now()}`;
+      newState.binaryChannels.push(bin_channel_name);
+      newState[bin_channel_name] = {};
+      break;
+
+    case actionTypes.REMOVE_SELECTED_CHANNEL:
+      const channelID = action.payload.channelID;
+      console.log("removing channel ID: ", channelID);
+
+      newState = clone(oldState, false);
+      if (channelID.includes("rgb")) {
+        newState.rgbChannels = newState.rgbChannels.filter(
+          (e) => e !== channelID
+        );
+        delete newState[channelID];
+      } else if (channelID.includes("bin")) {
+        newState.binaryChannels = newState.binaryChannels.filter(
+          (e) => e !== channelID
+        );
+        delete newState[channelID];
+      }
       break;
 
     default:

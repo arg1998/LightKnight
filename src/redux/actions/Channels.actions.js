@@ -5,16 +5,16 @@ export const placeKeyframe = (channelName, framePos, data) => ({
   payload: {
     channelName,
     framePos,
-    data
-  }
+    data,
+  },
 });
 
 export const removeKeyframe = (channelName, framePos) => ({
   type: actionTypes.REMOVE_KEYFRAME,
   payload: {
     channelName,
-    framePos
-  }
+    framePos,
+  },
 });
 
 export const copyKeyFrames = (copyFrom, copyTo, channelName) => ({
@@ -22,8 +22,8 @@ export const copyKeyFrames = (copyFrom, copyTo, channelName) => ({
   payload: {
     copyFrom,
     copyTo,
-    channel: channelName
-  }
+    channel: channelName,
+  },
 });
 
 export const pasteKeyFrames = (pasteTo, channelName, maxFrames) => ({
@@ -31,8 +31,8 @@ export const pasteKeyFrames = (pasteTo, channelName, maxFrames) => ({
   payload: {
     pasteTo,
     channelName,
-    maxFrames
-  }
+    maxFrames,
+  },
 });
 
 export const removeKeyFrameRange = (
@@ -46,8 +46,8 @@ export const removeKeyFrameRange = (
     removeFrom,
     removeTo,
     channelName,
-    maxFrames
-  }
+    maxFrames,
+  },
 });
 
 export const placeGradient = (
@@ -65,8 +65,8 @@ export const placeGradient = (
     colorFrom,
     colorTo,
     channelName,
-    maxFrames
-  }
+    maxFrames,
+  },
 });
 
 export const loadProject = (
@@ -75,7 +75,8 @@ export const loadProject = (
   musicPath,
   musicName,
   musicFile,
-  channelsData
+  channelsData,
+  pageName = "new_project"
 ) => ({
   type: actionTypes.LOAD_PROJECT,
   payload: {
@@ -84,6 +85,27 @@ export const loadProject = (
     musicPath,
     musicName,
     musicFile,
-    channelsData
-  }
+    channelsData,
+    pageName,
+  },
+});
+
+export const addRgbChannel = () => ({
+  type: actionTypes.ADD_RGB_CHANNEL,
+});
+
+export const addBinChannel = () => ({
+  type: actionTypes.ADD_BIN_CHANNEL,
+});
+
+export const addOpacityChannel = () => ({
+  type: actionTypes.ADD_OPACITY_CHANNEL,
+});
+
+
+export const removeSelectedChannel = (channelID) => ({
+  type: actionTypes.REMOVE_SELECTED_CHANNEL,
+  payload: {
+    channelID,
+  },
 });

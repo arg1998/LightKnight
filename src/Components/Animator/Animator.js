@@ -10,16 +10,21 @@ import {
   pause,
   moveFramePos,
   selectChannel,
-  setCurrentFramePos
+  setCurrentFramePos,
 } from "../../redux/actions/App.actions";
 import "./Animator.css";
 import Button from "../GeneralComponents/Button";
 import ColorPicker from "../ColorPicker/ColorPicker";
 import {
   placeKeyframe,
-  removeKeyframe
+  removeKeyframe,
+  addRgbChannel,
+  addBinChannel,
+  addOpacityChannel,
+  removeSelectedChannel,
 } from "../../redux/actions/Channels.actions";
-import clone from "clone";
+import { toOpacity } from "../../utils/OpacityToAlphaScalar";
+import tinyColor from "tinycolor2";
 import CopyAndRemove from "../CopyAndRemove/CopyAndRemove";
 import GradientEffect from "../GradientEffect/GradientEffect";
 import { writeJsonFile } from "../../utils/IO";
@@ -27,13 +32,27 @@ import removeIcon from "./eraser.png";
 import editIcon from "./edit.png";
 import IconButton from "../GeneralComponents/IconButton";
 import LiveStage from "../LiveStage/LiveStage";
+
 const { ipcRenderer } = require("electron");
 
 class Animator extends Component {
   state = {
     waveSurferLoaded: false,
     currentColor: null,
-    focusOnInput: false
+    focusOnInput: false,
+  };
+  speed = 1.0;
+  ctrlPressed = false;
+
+  _changeSped = (value) => {
+    this.speed += value;
+    if (this.speed < 0.5) {
+      this.speed = 0.5;
+    } else if (this.speed > 1.0) {
+      this.speed = 1.0;
+    } else {
+      this.waveForm.setPlaybackRate(this.speed);
+    }
   };
 
   componentDidMount() {
@@ -42,27 +61,30 @@ class Animator extends Component {
       "change_title",
       `${this.props.projectName} : [${this.props.projectPath}]`
     );
-    
   }
   componentWillUnmount() {
     document.removeEventListener("keypress", this._handleGlobalKeyPress);
   }
 
   _saveProject = async () => {
-    const { projectPath, channelsData } = this.props;
+    const { projectPath, channelsData, maxFrames } = this.props;
+    delete channelsData["clipBoard"];
+    channelsData["framesCount"] = maxFrames;
+    console.log("path: ", projectPath);
+
     await writeJsonFile(projectPath, "channelsData.json", channelsData);
   };
 
-  _setFocusOnInput = focus => {
+  _setFocusOnInput = (focus) => {
     this.setState({ focusOnInput: focus });
   };
 
-  _receiveWaveForm = wf => {
+  _receiveWaveForm = (wf) => {
     this.waveForm = wf;
     this.setState({ waveSurferLoaded: true });
   };
 
-  _handleOnColorPickerChange = color => {
+  _handleOnColorPickerChange = (color) => {
     this.setState({ currentColor: color.hex });
   };
 
@@ -89,12 +111,60 @@ class Animator extends Component {
     if (selectedChannel.startsWith("rgb")) {
       // if its on the rgb channel
       data = this.state.currentColor;
+    } else if (
+      selectedChannel.startsWith("opa") &&
+      this.state.currentColor !== null
+    ) {
+      // if its on the opacity channel
+      const hsl_lightness = tinyColor(this.state.currentColor).toHsl().l;
+      data = Math.floor(toOpacity(hsl_lightness));
     }
     placeKeyFrame(selectedChannel, currentFramePos, data);
   };
 
-  _handleGlobalKeyPress = e => {
+  _moveSelectedChannelUpOrDown = (direction) => {
+    const { selectedChannel, channelsData } = this.props;
+    if (!selectedChannel) {
+      console.log("select a channel first, then navigate between them.");
+      return;
+    }
+
+    const channelsList = [
+      ...[...channelsData.rgbChannels].reverse(),
+      ...[...channelsData.opacityChannels].reverse(),
+      ...[...channelsData.binaryChannels].reverse(),
+    ];
+
+    const currentIndex = channelsList.findIndex(
+      (element) => element === selectedChannel
+    );
+    if (currentIndex < 0) {
+      console.log(
+        "current selected channel (" + selectedChannel + ") is invalid"
+      );
+      return;
+    }
+
+    let newSelectedChannelIndex = 0;
+    if (direction === "up") {
+      newSelectedChannelIndex = (currentIndex + 1) % channelsList.length;
+    } else {
+      if (currentIndex === 0) {
+        newSelectedChannelIndex = channelsList.length - 1;
+      } else {
+        newSelectedChannelIndex = currentIndex - 1;
+      }
+    }
+
+    const channel = channelsList[newSelectedChannelIndex];
+
+    if (channel) {
+      this.props.selectChannel(channel);
+    }
+  };
+  _handleGlobalKeyPress = (e) => {
     const keyCode = e.keyCode;
+
     switch (keyCode) {
       case 32: // SPACE : remove a keyframe
         this._handleRemoveKeyframe();
@@ -132,52 +202,22 @@ class Animator extends Component {
         if (this.state.focusOnInput) break;
         this.props.moveFramePos(+25);
         break;
-
-      case 119: // W : select upper channel
-        let rgbChannels = clone(this.props.channelsData.rgbChannels);
-        let binChannels = clone(this.props.channelsData.binaryChannels);
-        let allChannelNames = rgbChannels
-          .reverse()
-          .concat(binChannels.reverse());
-
-        if (this.props.selectedChannel === null) {
-          this.props.selectChannel(allChannelNames[0]);
-        } else {
-          let index = allChannelNames.indexOf(this.props.selectedChannel);
-
-          if (index === allChannelNames.length - 1) {
-            index = -1;
-          }
-          const nextChannelName = allChannelNames[index + 1];
-
-          this.props.selectChannel(nextChannelName);
-        }
-
+      case 91: // [ key for lowering the playback speed
+        this._changeSped(-0.1);
+        break;
+      case 93: // ] key for lowering the playback speed
+        this._changeSped(0.1);
         break;
 
-      case 115: // S : select lower channel
-        let rgbChannels_fuck = clone(this.props.channelsData.rgbChannels);
-        let binChannels_fuck = clone(this.props.channelsData.binaryChannels);
-        let allChannelNames_fuck = rgbChannels_fuck
-          .reverse()
-          .concat(binChannels_fuck.reverse());
-
-        if (this.props.selectedChannel === null) {
-          this.props.selectChannel(
-            allChannelNames_fuck[allChannelNames_fuck.length - 1]
-          );
-        } else {
-          let index = allChannelNames_fuck.indexOf(this.props.selectedChannel);
-
-          if (index === 0) {
-            index = allChannelNames_fuck.length;
-          }
-          const nextChannelName = allChannelNames_fuck[index - 1];
-
-          this.props.selectChannel(nextChannelName);
-        }
+      case 119:
+        //w key to move channel up
+        this._moveSelectedChannelUpOrDown("up");
         break;
 
+      case 115:
+        // s key to move channel down
+        this._moveSelectedChannelUpOrDown("down");
+        break;
       default:
         break;
     }
@@ -201,7 +241,7 @@ class Animator extends Component {
       loading,
       maxFrames,
       setCurrentFramePosition,
-      musicFileBlob
+      musicFileBlob,
     } = this.props;
 
     let wf = (
@@ -228,7 +268,34 @@ class Animator extends Component {
     return (
       <>
         <div className={"Animator_Header"}>
-          <div />
+          <div>
+            <Button
+              value={"Add RGB Channel"}
+              onClick={() => {
+                this.props.addRgbChannel();
+              }}
+            />
+            <Button
+              value={"Add Opacity Channel"}
+              onClick={() => {
+                this.props.addOpacityChannel();
+              }}
+            />
+            <Button
+              value={"Add Binary Channel"}
+              onClick={() => {
+                this.props.addBinaryChannel();
+              }}
+            />
+            <Button
+              value={"REMOVE SELECTED CHANNEL"}
+              onClick={() => {
+                if (selectedChannel) {
+                  this.props.removeSelectedChannel(selectedChannel);
+                }
+              }}
+            />
+          </div>
           <Button value={"Save"} onClick={this._saveProject} />
         </div>
 
@@ -247,7 +314,10 @@ class Animator extends Component {
           />
 
           <div className={"Animator_mid_copy_remove_container"}>
-            <GradientEffect onInputFocus={this._setFocusOnInput} />
+            <GradientEffect
+              onInputFocus={this._setFocusOnInput}
+              currentColor={this.state.currentColor}
+            />
             <CopyAndRemove onInputFocus={this._setFocusOnInput} />
           </div>
         </div>
@@ -299,7 +369,7 @@ class Animator extends Component {
     );
   }
 }
-const mapStateToProps = newState => ({
+const mapStateToProps = (newState) => ({
   isPlaying: newState.app.play,
   zoomLevel: newState.app.zoomLevel,
   duration: newState.app.duration,
@@ -312,23 +382,25 @@ const mapStateToProps = newState => ({
   projectName: newState.app.projectName,
   projectPath: newState.app.projectPath,
   musicPath: newState.app.musicPath,
-  musicFileBlob: newState.app.musicFileBlob
+  musicFileBlob: newState.app.musicFileBlob,
 });
 
-const mapDispatchToProps = dispatch => ({
-  zoomTo: level => dispatch(zoomTo(level)),
+const mapDispatchToProps = (dispatch) => ({
+  zoomTo: (level) => dispatch(zoomTo(level)),
   playMusic: () => dispatch(play()),
   pauseMusic: () => dispatch(pause()),
-  moveFramePos: jump => dispatch(moveFramePos(jump)),
-  selectChannel: name => dispatch(selectChannel(name)),
-  setCurrentFramePosition: pos => dispatch(setCurrentFramePos(pos)),
+  moveFramePos: (jump) => dispatch(moveFramePos(jump)),
+  selectChannel: (name) => dispatch(selectChannel(name)),
+  setCurrentFramePosition: (pos) => dispatch(setCurrentFramePos(pos)),
   placeKeyFrame: (channelName, framePos, data) =>
     dispatch(placeKeyframe(channelName, framePos, data)),
   removeKeyFrame: (channelName, framePos) =>
-    dispatch(removeKeyframe(channelName, framePos))
+    dispatch(removeKeyframe(channelName, framePos)),
+  addRgbChannel: () => dispatch(addRgbChannel()),
+  addBinaryChannel: () => dispatch(addBinChannel()),
+  addOpacityChannel: () => dispatch(addOpacityChannel()),
+  removeSelectedChannel: (channelID) =>
+    dispatch(removeSelectedChannel(channelID)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Animator);
+export default connect(mapStateToProps, mapDispatchToProps)(Animator);

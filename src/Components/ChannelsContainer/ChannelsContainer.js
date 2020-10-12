@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./ChannelsContainer.css";
 import RgbChannel from "../RgbChannel/RgbChannel";
 import BinaryChannel from "../BinaryChannel/BinaryChannel";
+import OpacityChannel from '../OpacityChannel/OpacityChannel';
 
 class ChannelsContainer extends Component {
   containerScrollBar = React.createRef();
@@ -80,7 +81,7 @@ class ChannelsContainer extends Component {
       currentFramePos
     } = this.props;
     let channels = [];
-
+    
     const keyFrameWidth = zoomLevel / fps;
 
     for (let bin of channelsData.binaryChannels) {
@@ -95,6 +96,23 @@ class ChannelsContainer extends Component {
           framesData={channelsData[bin]}
           selectChannel={selectChannel}
           isSelected={selectedChannel === bin}
+          setCurrentFramePosition={setCurrentFramePosition}
+        />
+      );
+    }
+
+    for (let opa of channelsData.opacityChannels) {
+      channels.push(
+        <OpacityChannel
+          key={opa}
+          zoomLevel={zoomLevel}
+          duration={duration}
+          fps={fps}
+          keyFrameWidth={keyFrameWidth}
+          channelName={opa}
+          framesData={channelsData[opa]}
+          selectChannel={selectChannel}
+          isSelected={selectedChannel === opa}
           setCurrentFramePosition={setCurrentFramePosition}
         />
       );

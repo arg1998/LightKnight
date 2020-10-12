@@ -1,16 +1,20 @@
 # Light Knight Animator
 Light Knight (**_LK_** for short) is a LED Strip Animator. You can load any music and start animating your LED strips by placing keyframes at specific position. to actually see the animation on strips you must have a [Arduino Board](https://www.arduino.cc/).
 
-**WARNING**: This project is still under development. codes for Arduino will be committed soon. and some video tutorials will be posted on youtube too ;-). 
+**WARNING**: This project is still under development. codes for Arduino will be committed soon. and some video tutorials will be posted on youtube too ;-).
 
-Built With :heart: (actually PAIN) with [ReactJs](https://reactjs.org/), [Redux](https://redux.js.org/), [ElectronJs](https://electronjs.org/), [WaveSurfer](https://wavesurfer-js.org/), [TinyColor](https://bgrins.github.io/TinyColor/) and ...
+**WARNING**: this app only produces some project file and does not interact with _Arduino Boards_ directly. To be able to play your animations on LED strips, there is another app called [LightKnight Player](https://github.com/arg1998/LightKnightPlayer) that reads the generated project files, process them and then connect to your arduino to play the animations.
+
+Built With [ReactJs](https://reactjs.org/), [Redux](https://redux.js.org/), [ElectronJs](https://electronjs.org/), [WaveSurfer](https://wavesurfer-js.org/), [TinyColor](https://bgrins.github.io/TinyColor/) and ...
+
+
 
 ### How To Run? 
 + Clone this repository 
 + Go into the project directory
-+ Open terminal and type `npm install && npm run rebuild`
-+ For development environment, run `npm run electron-dev`
-+ To build and package, run `npm run electron-pack`
++ Open terminal and type `yarn install`
++ For development environment, run `yarn electron-dev`
++ To build and package with default configurations, run `yarn package`
 
 
 ### Keyboard Shortcuts : 
@@ -25,8 +29,10 @@ Built With :heart: (actually PAIN) with [ReactJs](https://reactjs.org/), [Redux]
 | 7            | Move Curser Backward By 25 Frame                       |
 | 9            | Move Curser Forward By 25 Frame                        |
 | Enter        | Place A New Keyframe                                   |
-| Space        | Remove A  Keyframe                                     |
+| Space        | Remove A Keyframe                                     |
 | Ctrl + Wheel | Interface Zoom                                         |
+| LMB click on waveform | Sets the **start** position (for gradient, copy and remove) |
+| Ctrl + LMB click on waveform | Sets the **end** position |
 
 <hr/>
 
@@ -35,7 +41,3 @@ Built With :heart: (actually PAIN) with [ReactJs](https://reactjs.org/), [Redux]
 <img src="./screenshots/0002.png"/>
 <img src="./screenshots/0003.png"/>
 <img src="./screenshots/0004.png"/>
-<img src="./screenshots/0005.png"/>
-<img src="./screenshots/0006.png"/>
-
-

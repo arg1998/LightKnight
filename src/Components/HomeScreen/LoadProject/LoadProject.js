@@ -9,7 +9,7 @@ const pathResolver = window.require("path");
 
 export class LoadProject extends Component {
   state = {
-    projectPath: "/home/arg_1998/LightKnightProjects/saveTest"
+    projectPath: ""
   };
   _onChange = (value, id) => {
     this.setState({ [id]: value });

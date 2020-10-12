@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import Button from "../../GeneralComponents/Button";
 import { connect } from "react-redux";
-import { loadStage } from "../../../redux/actions/App.actions";
+import { loadProject } from "../../../redux/actions/Channels.actions";
+import { exist, readJsonFile, readMusicBlob } from "../../../utils/IO";
 const Dialog = require("electron").remote.dialog;
+const pathResolver = window.require("path");
 
 export class StageMode extends Component {
   state = {
-    projectPath: ""
+    projectPath: "/home/arg_1998/LightKnightProjects/saveTest"
   };
 
   _onOpenFolderHandler = () => {
@@ -24,10 +26,36 @@ export class StageMode extends Component {
     );
   };
 
-  _onLoadStage = () => {
+  _onLoadStage = async () => {
     const { projectPath } = this.state;
     if (projectPath === "") {
-      console.log("fill the input first you fuck");
+      console.log("invalid input, must select a folder");
+      return;
+    }
+    const configFilePath = pathResolver.join(projectPath, "config.json");
+    if (!exist(configFilePath)) {
+      console.log(
+        "cant load config file. did you select the right project folder? "
+      );
+      return;
+    }
+
+    const config = await readJsonFile(projectPath, "config.json");
+    const channelsData = await readJsonFile(projectPath, "channelsData.json");
+    if (config && channelsData) {
+      const { projectName, musicName } = config;
+      const musicBlob = await readMusicBlob(projectPath, musicName);
+      this.props.loadProject(
+        projectName,
+        projectPath,
+        null,
+        musicName,
+        musicBlob,
+        channelsData,
+        "stage"
+      );
+    } else {
+      console.log("Error reading config file");
       return;
     }
   };
@@ -52,10 +80,27 @@ export class StageMode extends Component {
     );
   }
 }
-
 const mapDispatchToProps = dispatch => ({
-  loadStage: (musicFileBuffer, channelsData) =>
-    dispatch(loadStage(musicFileBuffer, channelsData))
+  loadProject: (
+    projectName,
+    projectPath,
+    musicPath,
+    musicName,
+    musicFile,
+    channelsData,
+    pageName
+  ) =>
+    dispatch(
+      loadProject(
+        projectName,
+        projectPath,
+        musicPath,
+        musicName,
+        musicFile,
+        channelsData,
+        pageName
+      )
+    )
 });
 
 export default connect(

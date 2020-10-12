@@ -7,24 +7,26 @@ const isDev = require("electron-is-dev");
 let mainWindow;
 
 function createWindow() {
-  const menu = Menu.buildFromTemplate([]);
+  // const menu = Menu.buildFromTemplate([]);
   mainWindow = new BrowserWindow({
     minWidth: 1360,
     minHeight: 768,
     webPreferences: {
-      nodeIntegration: true
-    }
+      nodeIntegration: true,
+    },
   });
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
       : `file://${path.join(__dirname, "../build/index.html")}`
   );
-  if(isDev){
-    // mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
+
+  if (isDev) {
+    mainWindow.webContents.openDevTools();
   }
-  // mainWindow.setMenu(menu);
-  mainWindow.setTitle(".:: Light Knight ::.")
+  mainWindow.setMenu(null);
+  mainWindow.setTitle(".:: Light Knight ::.");
   mainWindow.maximize();
   mainWindow.on("closed", () => (mainWindow = null));
 

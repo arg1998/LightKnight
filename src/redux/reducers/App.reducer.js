@@ -13,8 +13,9 @@ const initialState = {
   duration: 0, // in milliseconds
   currentFramePos: 0,
   maxFrames: 0,
+  speed: 1.0,
   loading: true,
-  selectedChannel: null
+  selectedChannel: null,
 };
 
 const AppReducer = (oldState = initialState, action) => {
@@ -112,7 +113,8 @@ const AppReducer = (oldState = initialState, action) => {
         projectPath,
         musicPath,
         musicName,
-        musicFile
+        musicFile,
+        pageName,
       } = action.payload;
       newState = clone(oldState, false, 1);
       newState.projectName = projectName;
@@ -120,11 +122,11 @@ const AppReducer = (oldState = initialState, action) => {
       newState.musicPath = musicPath;
       newState.musicName = musicName;
       newState.musicFileBlob = musicFile;
-      newState.pageName = "new_project";
+      newState.pageName = pageName;
       break;
 
     case actionTypes.LOAD_STAGE:
-      const {musicFileBuffer} = action.payload;
+      const { musicFileBuffer } = action.payload;
       newState = clone(oldState, false, 1);
       newState.pageName = "stage";
       newState.musicFileBlob = new Blob([new Uint8Array(musicFileBuffer)]);

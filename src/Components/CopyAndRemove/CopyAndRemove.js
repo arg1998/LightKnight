@@ -5,17 +5,53 @@ import { connect } from "react-redux";
 import {
   copyKeyFrames,
   pasteKeyFrames,
-  removeKeyFrameRange
+  removeKeyFrameRange,
 } from "../../redux/actions/Channels.actions";
 
 class CopyAndRemove extends Component {
   state = {
-    copyFrom: "",
-    copyTo: "",
-    pasteFrom: "",
-    removeFrom: "",
-    removeTo: ""
+    isCtrlPressed: false,
   };
+
+  selectionRange = {
+    beginPose: 0,
+    endPose: 0,
+  };
+
+  componentDidMount() {
+    document.addEventListener("keydown", this._ctrlPressHandler);
+    document.addEventListener("keyup", this._ctrlReleaseHandler);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this._ctrlPressHandler);
+    document.removeEventListener("keyup", this._ctrlReleaseHandler);
+  }
+
+  _ctrlPressHandler = (e) => {
+    if (e.keyCode === 17 && !this.state.isCtrlPressed) {
+      this.setState({ isCtrlPressed: true });
+    }
+  };
+  _ctrlReleaseHandler = (e) => {
+    if (e.keyCode === 17) {
+      this.setState({ isCtrlPressed: false });
+    }
+  };
+
+  calculateSelectionRange(currentPose) {
+    const { isCtrlPressed } = this.state;
+
+    if (isCtrlPressed) {
+      if (currentPose < this.selectionRange.beginPose) {
+        this.selectionRange.endPose = this.selectionRange.beginPose;
+        this.selectionRange.beginPose = currentPose;
+      } else {
+        this.selectionRange.endPose = currentPose;
+      }
+    } else if (this.selectionRange.endPose !== currentPose) {
+      this.selectionRange.beginPose = currentPose;
+    }
+  }
 
   _handleFocus = () => {
     this.props.onInputFocus(true);
@@ -25,68 +61,71 @@ class CopyAndRemove extends Component {
     this.props.onInputFocus(false);
   };
 
-  _handleChange = (value, id) => {
-    if (String(value).includes(".")) return;
-    value = Number(value);
-    if (!Number.isInteger(value)) return;
-    if (value < 0) return;
-    this.setState({ [id]: value });
-  };
+  // _handleChange = (value, id) => {
+  //   if (String(value).includes(".")) return;
+  //   value = Number(value);
+  //   if (!Number.isInteger(value)) return;
+  //   if (value < 0) return;
+  //   this.setState({ [id]: value });
+  // };
 
   _handleClearInputs = () => {
-    this.setState({
-      copyFrom: "",
-      copyTo: "",
-      pasteFrom: "",
-      removeFrom: "",
-      removeTo: ""
-    });
+    this.selectionRange.beginPose = 0;
+    this.selectionRange.endPose = 0;
+    this.setState({});
   };
 
   _removeKeyFrames = () => {
-    const { removeFrom, removeTo } = this.state;
+    const { beginPose, endPose } = this.selectionRange;
     const { selectedChannel, maxFrames, removeKeyFrameRange } = this.props;
     if (selectedChannel === null) {
       console.log("a channel must be selected to remove its keyframes");
       return;
     } else if (
-      removeFrom >= removeTo ||
-      removeTo > maxFrames ||
-      removeTo - removeFrom === 1
+      beginPose >= endPose ||
+      endPose > maxFrames ||
+      endPose - beginPose === 1
     ) {
       console.log("remove range is not valid");
       return;
     } else {
-      removeKeyFrameRange(removeFrom, removeTo, selectedChannel, maxFrames);
+      removeKeyFrameRange(beginPose, endPose, selectedChannel, maxFrames);
     }
   };
 
   _pasteKeyFrames = () => {
-    const { pasteFrom } = this.state;
-    const { selectedChannel, pasteKeyFrames, maxFrames } = this.props;
+    const {
+      currentPos,
+      selectedChannel,
+      pasteKeyFrames,
+      maxFrames,
+    } = this.props;
 
-    if (pasteFrom === "" || pasteFrom >= maxFrames) {
+    if (currentPos === "" || currentPos >= maxFrames) {
       console.log("Paste To keyframe must be lower than ", maxFrames);
       return;
     }
-    pasteKeyFrames(pasteFrom, selectedChannel, maxFrames);
+    pasteKeyFrames(currentPos, selectedChannel, maxFrames);
   };
 
   _copyKeyframes = () => {
-    const { copyFrom, copyTo } = this.state;
     const { selectedChannel, copyKeyFrames } = this.props;
+    const { beginPose, endPose } = this.selectionRange;
 
-    if (copyFrom >= copyTo) {
-      console.log("CopyTo must be greater than CopyFrom");
+    if (beginPose >= endPose) {
+      console.log("endPose must be greater than beginPose");
       return;
     } else if (selectedChannel === null) {
       console.log("A channel must be selected first to copy");
       return;
     }
-    copyKeyFrames(copyFrom, copyTo, selectedChannel);
+    copyKeyFrames(beginPose, endPose, selectedChannel);
   };
 
   render() {
+    const { currentPos } = this.props;
+    this.calculateSelectionRange(currentPos);
+
     return (
       <div className={"CAR_Container"}>
         <form>
@@ -96,15 +135,17 @@ class CopyAndRemove extends Component {
             <input
               onFocus={this._handleFocus}
               onBlur={this._handleBlur}
-              onChange={e => this._handleChange(e.target.value, "copyFrom")}
-              value={this.state.copyFrom}
+              readOnly={true}
+              // onChange={(e) => this._handleChange(e.target.value, "copyFrom")}
+              value={this.selectionRange.beginPose}
             />
             <i>&nbsp;To&nbsp; </i>
             <input
-              onChange={e => this._handleChange(e.target.value, "copyTo")}
+              // onChange={(e) => this._handleChange(e.target.value, "copyTo")}
               onFocus={this._handleFocus}
               onBlur={this._handleBlur}
-              value={this.state.copyTo}
+              value={this.selectionRange.endPose}
+              readOnly={true}
             />
           </label>
 
@@ -112,10 +153,11 @@ class CopyAndRemove extends Component {
             <strong>Paste </strong>
             <i>to &nbsp;&nbsp;&nbsp;&nbsp;</i>
             <input
-              onChange={e => this._handleChange(e.target.value, "pasteFrom")}
+              // onChange={(e) => this._handleChange(e.target.value, "pasteFrom")}
               onFocus={this._handleFocus}
               onBlur={this._handleBlur}
-              value={this.state.pasteFrom}
+              value={currentPos}
+              readOnly={true}
             />
             <Button value={"Clear"} onClick={this._handleClearInputs} />
           </label>
@@ -131,15 +173,17 @@ class CopyAndRemove extends Component {
             <input
               onFocus={this._handleFocus}
               onBlur={this._handleBlur}
-              onChange={e => this._handleChange(e.target.value, "removeFrom")}
-              value={this.state.removeFrom}
+              // onChange={(e) => this._handleChange(e.target.value, "removeFrom")}
+              value={this.selectionRange.beginPose}
+              readOnly={true}
             />
             <i>&nbsp;To&nbsp; </i>
             <input
-              onChange={e => this._handleChange(e.target.value, "removeTo")}
+              // onChange={(e) => this._handleChange(e.target.value, "removeTo")}
               onFocus={this._handleFocus}
               onBlur={this._handleBlur}
-              value={this.state.removeTo}
+              value={this.selectionRange.endPose}
+              readOnly={true}
             />
           </label>
         </form>
@@ -149,22 +193,20 @@ class CopyAndRemove extends Component {
   }
 }
 
-const mapStateToProps = newState => ({
+const mapStateToProps = (newState) => ({
   fps: newState.app.fps,
   maxFrames: newState.app.maxFrames,
-  selectedChannel: newState.app.selectedChannel
+  selectedChannel: newState.app.selectedChannel,
+  currentPos: newState.app.currentFramePos,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   copyKeyFrames: (copyFrom, copyTo, channelName) =>
     dispatch(copyKeyFrames(copyFrom, copyTo, channelName)),
   pasteKeyFrames: (pasteTo, channelName, maxFrames) =>
     dispatch(pasteKeyFrames(pasteTo, channelName, maxFrames)),
   removeKeyFrameRange: (removeFrom, removeTo, channelName, maxFrames) =>
-    dispatch(removeKeyFrameRange(removeFrom, removeTo, channelName, maxFrames))
+    dispatch(removeKeyFrameRange(removeFrom, removeTo, channelName, maxFrames)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CopyAndRemove);
+export default connect(mapStateToProps, mapDispatchToProps)(CopyAndRemove);

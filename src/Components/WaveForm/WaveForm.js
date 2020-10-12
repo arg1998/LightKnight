@@ -50,11 +50,16 @@ class WaveForm extends Component {
     this.waveSurfer.on("ready", () => {
       setDuration(this.waveSurfer.getDuration());
     });
-    this.waveSurfer.on("seek", progress => {
-      setCurrentFramePos(
-        Math.floor((progress * this.waveSurfer.getDuration()) / 0.04)
-      );
-    });
+    if (
+      this.props.currentFramePos !== undefined &&
+      this.props.currentFramePos !== null
+    ) {
+      this.waveSurfer.on("seek", progress => {
+        setCurrentFramePos(
+          Math.floor((progress * this.waveSurfer.getDuration()) / 0.04)
+        );
+      });
+    }
 
     propagateReference(this.waveSurfer);
     this.waveSurfer.loadBlob(musicFileBlob);

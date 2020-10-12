@@ -4,7 +4,6 @@ import Animator from "./Components/Animator/Animator";
 import HomeScreen from "./Components/HomeScreen/HomeScreen";
 import { connect } from "react-redux";
 import { changePage, createNewProject } from "./redux/actions/App.actions";
-import Stage from "./Components/Stage/Stage";
 const { webFrame } = require("electron");
 // webFrame.setZoomFactor(0.8);
 class App extends React.Component {
@@ -52,9 +51,7 @@ class App extends React.Component {
       );
     } else if (pageName === "new_project") {
       page = <Animator />;
-    } else if (pageName === "stage") {
-      page = <Stage />;
-    }
+    } 
 
     webFrame.setZoomFactor(this.state.currentZoom / 100);
 
