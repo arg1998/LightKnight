@@ -7,7 +7,8 @@ Light Knight (**_LK_** for short) is a LED Strip Animator. You can load any musi
 
 Built With [ReactJs](https://reactjs.org/), [Redux](https://redux.js.org/), [ElectronJs](https://electronjs.org/), [WaveSurfer](https://wavesurfer-js.org/), [TinyColor](https://bgrins.github.io/TinyColor/) and ...
 
-
+### Demo
+[This video](https://www.youtube.com/watch?v=njnCorMyLxw) is the first test of the application, Using 2 RGB LED strips and 3 White LED strips.  
 
 ### How To Run? 
 + Clone this repository 
