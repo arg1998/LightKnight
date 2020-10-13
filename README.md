@@ -29,8 +29,10 @@ Built With [ReactJs](https://reactjs.org/), [Redux](https://redux.js.org/), [Ele
 | 6            | Move Curser Forward By 5 Frame                         |
 | 7            | Move Curser Backward By 25 Frame                       |
 | 9            | Move Curser Forward By 25 Frame                        |
+| [            | Decrease Playback Speed                                |
+| ]            | Increase Playback Speed                                |
 | Enter        | Place A New Keyframe                                   |
-| Space        | Remove A Keyframe                                     |
+| Space        | Remove A Keyframe                                      |
 | Ctrl + Wheel | Interface Zoom                                         |
 | LMB click on waveform | Sets the **start** position (for gradient, copy and remove) |
 | Ctrl + LMB click on waveform | Sets the **end** position |
