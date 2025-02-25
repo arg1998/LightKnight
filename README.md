@@ -40,7 +40,7 @@ Built With [ReactJs](https://reactjs.org/), [Redux](https://redux.js.org/), [Ele
 <hr/>
 
 ### Screenshots 
-<img src="./screenshots/0001.png"/>
-<img src="./screenshots/0002.png"/>
-<img src="./screenshots/0003.png"/>
-<img src="./screenshots/0004.png"/>
+<img src="/screenshots/0001.png"/>
+<img src="/screenshots/0002.png"/>
+<img src="/screenshots/0003.png"/>
+<img src="/screenshots/0004.png"/>
